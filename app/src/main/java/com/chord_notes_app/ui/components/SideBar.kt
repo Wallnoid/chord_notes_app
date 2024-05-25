@@ -3,23 +3,17 @@
 package com.chord_notes_app.ui.components
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Create
-import androidx.compose.material.icons.filled.Face
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Create
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,41 +23,27 @@ import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHost
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
 import com.chord_notes_app.routes.Routes
-import com.chord_notes_app.ui.pages.home.HomePage
-import com.chord_notes_app.ui.pages.notes.NotesPage
-import com.chord_notes_app.ui.pages.profile.ProfilePage
-import com.chord_notes_app.ui.pages.settings.SettingsPage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun CustomSidebar(){
-    val navigationController = rememberNavController()
-    val coroutineScope = rememberCoroutineScope()
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val context = LocalContext.current.applicationContext
-    val titleState = remember { mutableStateOf("Home") }
-    val selected = remember { mutableStateOf(0) }
+fun GlobalSchema(content: @Composable () -> Unit ,
+                 coroutineScope: CoroutineScope,
+                 drawerState: DrawerState,
+                 navigationController: NavController,
+                 titleState: MutableState<String>,
+                 selected:  MutableState<Int>,){
 
 
     ModalNavigationDrawer(
@@ -91,9 +71,9 @@ fun CustomSidebar(){
                     navigationController = navigationController,
                     titleState = titleState,
                     selectedValue = 0,
-                    title = "Home",
+                    title = "My Notes",
                     icon = Icons.Outlined.Home,
-                    route = Routes.Home.screen
+                    route = Routes.MyNotes.screen
                 )
 
                 DrawerItem(
@@ -103,10 +83,17 @@ fun CustomSidebar(){
                     navigationController = navigationController,
                     titleState = titleState,
                     selectedValue = 1,
-                    title = "Notes",
+                    title = "Groups Notes",
                     icon = Icons.Outlined.Create ,
-                    route = Routes.Notes.screen
+                    route = Routes.GroupNotes.screen
                 )
+
+                Spacer(modifier = Modifier.weight(weight = 0.5f))
+
+
+                Text("Configuration", modifier = Modifier.padding(16.dp),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.outline)
 
                 DrawerItem(
                     selected = selected ,
@@ -154,7 +141,7 @@ fun CustomSidebar(){
                         },
                         icon = {
                             Icon(
-                                imageVector = Icons.Outlined.Info, contentDescription = "",
+                                imageVector = Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = "",
                                 tint = MaterialTheme.colorScheme.onBackground
                             )
                         },
@@ -185,14 +172,8 @@ fun CustomSidebar(){
                   })
           }
         ) {
-            NavHost(navController = navigationController,
-                startDestination = Routes.Home.screen ){
-                composable(Routes.Home.screen){HomePage()}
-                composable(Routes.Notes.screen){NotesPage()}
-                composable(Routes.Profile.screen){ ProfilePage()}
-                composable(Routes.Settings.screen){ SettingsPage()}
 
-            }
+            content()
 
 
 
@@ -205,7 +186,7 @@ fun CustomSidebar(){
 fun DrawerItem(selected: MutableState<Int>,
                coroutineScope: CoroutineScope,
                drawerState: DrawerState,
-               navigationController: NavHostController,
+               navigationController: NavController,
                titleState: MutableState<String>,
                selectedValue: Int,
                title: String,
@@ -216,15 +197,16 @@ fun DrawerItem(selected: MutableState<Int>,
 
     NavigationDrawerItem(
         label = { Text(text = title ,
-            color = if(selected.value == selectedValue ) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground,
+            color = if(selected.value == selectedValue ) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodyLarge.copy(
                 fontSize = 20.sp
             )) },
         icon = { Icon(imageVector = icon, contentDescription ="",
-            tint= if(selected.value == selectedValue ) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground)},
+            tint= if(selected.value == selectedValue ) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onBackground)},
 
         selected = false,
         onClick = {
+            println("HOLA")
             coroutineScope.launch {
                 drawerState.close()
             }

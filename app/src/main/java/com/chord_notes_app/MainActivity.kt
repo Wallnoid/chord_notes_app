@@ -6,12 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.chord_notes_app.ui.components.CustomSidebar
-import com.chord_notes_app.ui.pages.home.HomePage
+import com.chord_notes_app.navigation.Navigation
 import com.chord_notes_app.ui.theme.AppTheme
 
 
@@ -21,33 +17,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             AppTheme {
 
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.background
                 ) {
-                   CustomSidebar()
+                 Navigation()
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier,
-        color = MaterialTheme.colorScheme.secondary,
-        style = MaterialTheme.typography.headlineLarge,
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AppTheme {
-
-        HomePage()
-    }
-}
