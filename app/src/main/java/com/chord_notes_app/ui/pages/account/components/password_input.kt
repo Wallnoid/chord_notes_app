@@ -32,22 +32,21 @@ fun PasswordTextField(
     label: String,
     icon: ImageVector,
     isValid: Boolean = true,
-    errorMessage: String = ""
+    errorMessage: String = "",
+    text: String,
+    onChange: (String) -> Unit
 
     ) {
     var hidden by remember { mutableStateOf(true) } //1
-    var it="";
 
-    var text by remember { mutableStateOf(TextFieldValue("")) }
+
     return TextField(
 
         value = text,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         leadingIcon = { Icon(imageVector = Icons.Outlined.Lock, contentDescription = "PasswordIcon") },
         shape = RoundedCornerShape(50),
-        onValueChange = {
-            text = it
-        },
+        onValueChange = onChange,
 
         singleLine = true,
         isError = !isValid,

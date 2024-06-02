@@ -34,21 +34,19 @@ fun CustomTextField(
     placeholder: String,
     icon: ImageVector,
     isValid:Boolean = true,
-    errorMessage: String =""
+    errorMessage: String ="",
+    text: String,
+    onChange: (String) -> Unit
 
 ) {
-    var it="";
 
-    var text by remember { mutableStateOf(TextFieldValue("")) }
     return TextField(
 
 
         value = text,
         leadingIcon = { Icon(imageVector = icon, contentDescription = "emailIcon") },
         shape = RoundedCornerShape(10),
-        onValueChange = {
-            text = it
-        },
+        onValueChange = onChange,
         singleLine = true,
 
         isError = !isValid,

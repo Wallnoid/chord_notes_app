@@ -3,13 +3,22 @@
 package com.chord_notes_app.ui.components
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Create
-import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.automirrored.outlined.NoteAdd
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Groups2
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Divider
@@ -25,38 +34,80 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.chord_notes_app.R
 import com.chord_notes_app.routes.Routes
+import com.chord_notes_app.ui.theme.AppTheme
+import com.chord_notes_app.utils.SharedPreferencesManager
+import com.chord_notes_app.utils.cutString
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun GlobalSchema(content: @Composable () -> Unit ,
+fun GlobalSchema(content: @Composable () -> Unit,
                  coroutineScope: CoroutineScope,
                  drawerState: DrawerState,
                  navigationController: NavController,
                  titleState: MutableState<String>,
-                 selected:  MutableState<Int>,){
+                 selected:  MutableState<Int>
+                 ){
+
+    val context = LocalContext.current
+
+    var username: MutableState<String> =  remember { mutableStateOf("") }
+    val emailState =  remember { mutableStateOf("") }
+
+
+    LaunchedEffect(Unit){
+
+        val sharedPreferencesManager = SharedPreferencesManager.getInstance(context)
+
+        val user = sharedPreferencesManager.getData("username", "")
+        val email = sharedPreferencesManager.getData("email", "")
+        username.value = user
+        emailState.value = email
+
+        println("USERNAME DENTR "+username)
+
+    }
+
+    println("USERNAME "+username)
 
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled = true,
+
+
         drawerContent = {
             ModalDrawerSheet {
 
-                Text("Menu", modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.titleLarge)
-                Divider()
+                TopSideBar(
+                    userName = username.value,
+                    email = emailState.value
+                )
 
                 Spacer(modifier = Modifier.weight(weight = 0.1f))
+
+
 
                 Text("Browse", modifier = Modifier.padding(16.dp),
                     style = MaterialTheme.typography.titleMedium,
@@ -72,7 +123,7 @@ fun GlobalSchema(content: @Composable () -> Unit ,
                     titleState = titleState,
                     selectedValue = 0,
                     title = "My Notes",
-                    icon = Icons.Outlined.Home,
+                    icon = Icons.AutoMirrored.Outlined.NoteAdd,
                     route = Routes.MyNotes.screen
                 )
 
@@ -84,7 +135,7 @@ fun GlobalSchema(content: @Composable () -> Unit ,
                     titleState = titleState,
                     selectedValue = 1,
                     title = "Groups Notes",
-                    icon = Icons.Outlined.Create ,
+                    icon = Icons.Outlined.Groups2 ,
                     route = Routes.GroupNotes.screen
                 )
 
@@ -149,6 +200,8 @@ fun GlobalSchema(content: @Composable () -> Unit ,
                         selected = false,
                         onClick = {
 
+                            navigationController.navigate(route = Routes.GetStarted.screen)
+
 
                         }
                     )
@@ -182,6 +235,103 @@ fun GlobalSchema(content: @Composable () -> Unit ,
     }
 }
 
+
+@Composable
+fun TopSideBar(
+    userName: String,
+    email: String
+){
+
+    Box(modifier = Modifier.fillMaxWidth()
+    ){
+
+        Image(
+            painter = painterResource(id = R.drawable.sidebar),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxWidth()
+
+        )
+
+        Row(
+            modifier = Modifier
+                .padding(20.dp)
+                .align(Alignment.BottomStart)
+            ,
+            verticalAlignment = Alignment.CenterVertically
+
+        ) {
+
+            Box(
+                modifier = Modifier
+
+                    .size(70.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.tertiary,
+                        shape = CircleShape
+                    )
+
+                ,
+                contentAlignment = Alignment.Center
+
+            ) {
+
+
+                Icon(imageVector = Icons.Filled.Person, contentDescription = null,
+                    modifier = Modifier.size(40.dp),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                    )
+            }
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            Column {
+
+                Text(
+                    text = cutString(userName, 15) , style = MaterialTheme.typography.headlineMedium.copy(
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    textAlign = TextAlign.Center,
+
+                    )
+
+                Text(
+                    text = cutString(email, 20), style = MaterialTheme.typography.bodyMedium.copy(
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    textAlign = TextAlign.Center,
+
+                    )
+
+            }
+
+
+
+
+
+        }
+
+    }
+
+}
+
+@Preview(showBackground = true)
+@Composable
+fun MyComposablePreview() {
+
+    AppTheme {
+        TopSideBar(
+            userName = "WilliamPandilla",
+            email = ""
+        )
+
+    }
+
+}
+
 @Composable
 fun DrawerItem(selected: MutableState<Int>,
                coroutineScope: CoroutineScope,
@@ -206,7 +356,7 @@ fun DrawerItem(selected: MutableState<Int>,
 
         selected = false,
         onClick = {
-            println("HOLA")
+
             coroutineScope.launch {
                 drawerState.close()
             }

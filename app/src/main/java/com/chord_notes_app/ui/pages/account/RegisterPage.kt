@@ -23,6 +23,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -31,18 +33,27 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.chord_notes_app.R
+import com.chord_notes_app.routes.Routes
 import com.chord_notes_app.ui.components.CustomButton
 import com.chord_notes_app.ui.components.CustomTextButton
+import com.chord_notes_app.ui.pages.account.actions.register
 import com.chord_notes_app.ui.pages.account.components.CustomTextField
 import com.chord_notes_app.ui.pages.account.components.PasswordTextField
-import com.chord_notes_app.ui.theme.AppTheme
+import com.chord_notes_app.ui.viewModels.AuthViewModel
 
 @Composable
-fun RegisterPage(navController: NavController){
+fun RegisterPage(navController: NavController,
+                 authViewModel: AuthViewModel = hiltViewModel(),
+                 ){
+
+    val usernameState = remember { mutableStateOf("") }
+    val passwordState = remember { mutableStateOf("") }
+    val emailState = remember { mutableStateOf("") }
+
 
 
     Box(modifier = Modifier.fillMaxSize()){
@@ -75,15 +86,20 @@ fun RegisterPage(navController: NavController){
                     .background(Color.Transparent)
             ) {
 
-                IconButton(onClick = { /*TODO*/ },
+                IconButton(onClick = {
+                    navController.popBackStack()
+                },
                     modifier = Modifier.padding(0.dp)
                         .background(
                             Color.Transparent
                         )
 
+                    
+
                     ) {
                     Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
                         contentDescription = "",
+                        tint = Color(0xFF1E1A20)
 
                         )
                 }
@@ -92,7 +108,8 @@ fun RegisterPage(navController: NavController){
 
 
                 Text(text = "Sign Up ", style = MaterialTheme.typography.displayMedium.copy(
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1E1A20)
 
                 ))
 
@@ -101,7 +118,8 @@ fun RegisterPage(navController: NavController){
                 Text(
                     text = "create your account and get ready to write songs!",
                     style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1E1A20)
                     )
                 )
 
@@ -124,7 +142,7 @@ fun RegisterPage(navController: NavController){
                     modifier = Modifier
                         .fillMaxSize()
                         .background(
-                            Color.White
+                            MaterialTheme.colorScheme.background
                         ),
 
 
@@ -155,8 +173,10 @@ fun RegisterPage(navController: NavController){
                                 label = "User Name",
                                 icon = Icons.Outlined.Person,
                                 placeholder = "Enter your Name",
-                                isValid = false,
-                                errorMessage = "Error"
+                                isValid = true,
+                                errorMessage = "Error",
+                                text = usernameState.value,
+                                onChange = { usernameState.value = it }
 
                             )
 
@@ -167,7 +187,9 @@ fun RegisterPage(navController: NavController){
                                 icon = Icons.Outlined.Email,
                                 placeholder = "Enter your Email",
                                 isValid = false,
-                                errorMessage = "Error"
+                                errorMessage = "Error",
+                                text = emailState.value,
+                                onChange = { emailState.value = it }
                             )
 
                             Spacer(modifier = Modifier.height(30.dp))
@@ -175,7 +197,9 @@ fun RegisterPage(navController: NavController){
 
                             PasswordTextField(label = "", icon = Icons.Outlined.Info,
                                     isValid = false,
-                                errorMessage = "Error"
+                                errorMessage = "Error",
+                                text = passwordState.value,
+                                onChange = { passwordState.value = it }
                             )
 
 
@@ -186,7 +210,16 @@ fun RegisterPage(navController: NavController){
                     Spacer(modifier = Modifier.height(50.dp))
 
 
-                    CustomButton(onClick = { /*TODO*/ }, label = "Sign Up", 40)
+                    CustomButton(onClick = {
+                                           register(
+                                                  navController = navController,
+                                                  authViewModel = authViewModel,
+                                                  usernameState = usernameState.value,
+                                                  passwordState = passwordState.value,
+                                                  emailState = emailState.value,
+                                                    context = navController.context
+                                           )
+                                           }, label = "Sign Up", 40)
 
 
 
@@ -206,7 +239,7 @@ fun RegisterPage(navController: NavController){
                             )
                         )
 
-                        CustomTextButton(onClick = { /*TODO*/ }, label = "Sign In")
+                        CustomTextButton(onClick = {  navController.navigate(route = Routes.LogIn.screen) }, label = "Sign In")
 
 
                     }

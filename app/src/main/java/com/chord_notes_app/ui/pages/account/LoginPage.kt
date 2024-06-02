@@ -22,6 +22,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -31,16 +33,23 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.chord_notes_app.R
 import com.chord_notes_app.routes.Routes
 import com.chord_notes_app.ui.components.CustomButton
 import com.chord_notes_app.ui.components.CustomTextButton
+import com.chord_notes_app.ui.pages.account.actions.login
 import com.chord_notes_app.ui.pages.account.components.CustomTextField
 import com.chord_notes_app.ui.pages.account.components.PasswordTextField
+import com.chord_notes_app.ui.viewModels.AuthViewModel
 
 @Composable
-fun LoginPage(navController: NavController){
+fun LoginPage(navController: NavController,
+              authViewModel: AuthViewModel = hiltViewModel(),
+              ){
+    val usernameState = remember { mutableStateOf("") }
+    val passwordState = remember { mutableStateOf("") }
 
 
     Box(modifier = Modifier.fillMaxSize()){
@@ -87,6 +96,7 @@ fun LoginPage(navController: NavController){
                 ) {
                     Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBackIos,
                         contentDescription = "",
+                        tint = Color(0xFF1E1A20)
 
                         )
                 }
@@ -95,7 +105,8 @@ fun LoginPage(navController: NavController){
 
 
                 Text(text = "Sign In ", style = MaterialTheme.typography.displayMedium.copy(
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color =Color(0xFF1E1A20)
 
                 ))
 
@@ -104,7 +115,8 @@ fun LoginPage(navController: NavController){
                 Text(
                     text = "create your account and get ready to write songs!",
                     style = MaterialTheme.typography.bodyLarge.copy(
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1E1A20)
                     )
                 )
 
@@ -127,7 +139,7 @@ fun LoginPage(navController: NavController){
                     modifier = Modifier
                         .fillMaxSize()
                         .background(
-                            Color.White
+                            MaterialTheme.colorScheme.background
                         ),
 
 
@@ -159,17 +171,23 @@ fun LoginPage(navController: NavController){
                                 label = "User Name",
                                 icon = Icons.Outlined.Person,
                                 placeholder = "Enter your Name",
-                                isValid = false,
-                                errorMessage = "Error"
+                                isValid = true,
+                                errorMessage = "Error",
+                                text =  usernameState.value,
+                                onChange = { usernameState.value = it }
 
                             )
 
                             Spacer(modifier = Modifier.height(30.dp))
 
 
-                            PasswordTextField(label = "", icon = Icons.Outlined.Info,
-                                isValid = false,
-                                errorMessage = "Error"
+                            PasswordTextField(
+                                label = "Password",
+                                icon = Icons.Outlined.Info,
+                                isValid = true,
+                                errorMessage = "Error",
+                                text = passwordState.value,
+                                onChange = { passwordState.value = it }
                             )
 
 
@@ -180,7 +198,19 @@ fun LoginPage(navController: NavController){
                     Spacer(modifier = Modifier.height(50.dp))
 
 
-                    CustomButton(onClick = { signIn(navController)}, label = "Sign In", 40)
+                    CustomButton(onClick =
+                    {
+
+                        login(
+                            navController = navController,
+                            authViewModel = authViewModel,
+                            usernameState = usernameState.value,
+                            passwordState = passwordState.value,
+                            context = navController.context
+                        )
+
+
+                    }, label = "Sign In", 40)
 
 
 
@@ -213,7 +243,5 @@ fun LoginPage(navController: NavController){
 
 }
 
-fun signIn(navController: NavController) {
-    navController.navigate(route = Routes.MyNotes.screen)
-}
+
 
