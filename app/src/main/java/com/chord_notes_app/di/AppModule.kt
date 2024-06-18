@@ -1,6 +1,8 @@
 package com.chord_notes_app.di
 
 import com.chord_notes_app.api.AuthApi
+import com.chord_notes_app.api.GroupsApi
+import com.chord_notes_app.api.SongsApi
 import com.chord_notes_app.utils.constants.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -27,6 +29,20 @@ object AppModule {
     fun provideAuthApi(retrofit: Retrofit) : AuthApi {
         return retrofit.create(AuthApi::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideSongsApi(retrofit: Retrofit) : SongsApi {
+        return retrofit.create(SongsApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGroupsApi(retrofit: Retrofit) : GroupsApi {
+        return retrofit.create(GroupsApi::class.java)
+    }
+
+
 
 
 

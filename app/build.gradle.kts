@@ -73,7 +73,7 @@ dependencies {
     implementation ("androidx.compose.material:material-icons-extended:1.6.7")
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
+    implementation ("com.leinardi.android:speed-dial.compose:1.0.0-alpha04")
     //hilt
     val hilt_navigation_compose_version = "1.2.0"
     val hilt_version = "2.46"

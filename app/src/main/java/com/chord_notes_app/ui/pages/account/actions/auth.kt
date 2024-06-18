@@ -27,6 +27,7 @@ fun login(navController: NavController,
                 sharedPreferencesManager.saveData("email", authResponse.user.email)
                 sharedPreferencesManager.saveData("id", authResponse.user.id.toString())
                 sharedPreferencesManager.saveData("token", authResponse.token)
+                
                 navigate(navController, Routes.MyNotes.screen)
 
             }

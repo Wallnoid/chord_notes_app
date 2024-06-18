@@ -38,4 +38,41 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
+
+    fun logout(token:String, onResult:(Boolean) -> Unit ) {
+        viewModelScope.launch {
+            try {
+                authRepository.logout(token)
+                onResult(true)
+            } catch (e: Exception) {
+                println(e)
+                onResult(false)
+            }
+        }
+    }
+
+    fun logoutAll(onResult:(Boolean) -> Unit ) {
+
+        viewModelScope.launch {
+            try {
+                authRepository.logoutAll()
+                onResult(true)
+            } catch (e: Exception) {
+                onResult(false)
+            }
+        }
+    }
+
+    fun profile(onResult:(UserResponse?) -> Unit ) {
+        viewModelScope.launch {
+            try {
+                val user = authRepository.profile()
+                onResult(user)
+            } catch (e: Exception) {
+                onResult(null)
+            }
+        }
+    }
+
+
 }

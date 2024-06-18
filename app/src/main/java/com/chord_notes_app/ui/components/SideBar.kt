@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.NoteAdd
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Groups2
 import androidx.compose.material.icons.outlined.Person
@@ -50,10 +51,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.chord_notes_app.R
 import com.chord_notes_app.routes.Routes
+import com.chord_notes_app.ui.components.actions.logout
 import com.chord_notes_app.ui.theme.AppTheme
+import com.chord_notes_app.ui.viewModels.AuthViewModel
 import com.chord_notes_app.utils.SharedPreferencesManager
 import com.chord_notes_app.utils.cutString
 import kotlinx.coroutines.CoroutineScope
@@ -67,7 +71,8 @@ fun GlobalSchema(content: @Composable () -> Unit,
                  drawerState: DrawerState,
                  navigationController: NavController,
                  titleState: MutableState<String>,
-                 selected:  MutableState<Int>
+                 selected:  MutableState<Int>,
+                 authViewModel: AuthViewModel = hiltViewModel(),
                  ){
 
     val context = LocalContext.current
@@ -200,18 +205,23 @@ fun GlobalSchema(content: @Composable () -> Unit,
                         selected = false,
                         onClick = {
 
-                            navigationController.navigate(route = Routes.GetStarted.screen)
+                            logout(
+                                context = navigationController.context,
+                                authViewModel = authViewModel,
+                                navigationController = navigationController
+                            )
 
 
                         }
                     )
                 }
-                // ...other drawer items
+
             }
         }
     ) {
 
         Scaffold(
+
           topBar = {
               val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -222,7 +232,9 @@ fun GlobalSchema(content: @Composable () -> Unit,
                           drawerState.open()
                       }
 
-                  })
+                  },
+                  icon = Icons.Filled.Menu
+                  )
           }
         ) {
 

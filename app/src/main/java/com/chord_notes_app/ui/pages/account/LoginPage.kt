@@ -167,7 +167,7 @@ fun LoginPage(navController: NavController,
 
                             Spacer(modifier = Modifier.height(50.dp))
 
-                            CustomTextField(    
+                            CustomTextField(
                                 label = "User Name",
                                 icon = Icons.Outlined.Person,
                                 placeholder = "Enter your Name",

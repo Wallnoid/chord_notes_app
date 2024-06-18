@@ -3,11 +3,7 @@
 package com.chord_notes_app.ui.components
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -15,20 +11,28 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
-import kotlinx.coroutines.launch
+import androidx.compose.ui.unit.dp
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomTopAppBar(scrollBehavior: TopAppBarScrollBehavior, title: String,
-                    onNavigationIconClicked: () -> Unit ) {
+                    icon: ImageVector,
+                    onNavigationIconClicked: () -> Unit,
+
+                    action: @Composable () -> Unit= { }
+
+                    ) {
 
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.background,
             titleContentColor = MaterialTheme.colorScheme.onBackground,
+
         ),
         title = {
             Text(
@@ -45,13 +49,20 @@ fun CustomTopAppBar(scrollBehavior: TopAppBarScrollBehavior, title: String,
 
             }) {
                 Icon(
-                    imageVector = Icons.Filled.Menu,
+                    imageVector = icon,
                     contentDescription = "Localized description"
                 )
             }
         },
 
+        actions = {
+            action()
+
+        },
+
         scrollBehavior = scrollBehavior,
+
+        modifier = Modifier.shadow(elevation = 3.dp)
     )
 
 

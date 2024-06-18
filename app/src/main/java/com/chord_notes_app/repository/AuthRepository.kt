@@ -5,6 +5,7 @@ import com.chord_notes_app.data.AuthResponse
 import com.chord_notes_app.data.LoginRequest
 import com.chord_notes_app.data.RegisterRequest
 import com.chord_notes_app.data.UserResponse
+import retrofit2.Response
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
@@ -19,5 +20,17 @@ class AuthRepository @Inject constructor(
     suspend fun register(username: String, password: String, email: String): UserResponse {
         val registerRequest = RegisterRequest(username, password, email)
         return authApi.register(registerRequest)
+    }
+
+    suspend fun logout(token: String): Response<Void> {
+        return authApi.logout(token);
+    }
+
+    suspend fun logoutAll(){
+        return authApi.logoutAll();
+    }
+
+    suspend fun profile(): UserResponse{
+        return authApi.profile();
     }
 }

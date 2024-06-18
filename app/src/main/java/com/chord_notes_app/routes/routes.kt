@@ -11,4 +11,10 @@ sealed class Routes (val screen: String) {
     data object GroupNotes: Routes("groupnotes")
     data object Settings: Routes("settings")
     data object Profile: Routes("profile")
+
+    data object CreateEditNote: Routes("createeditnote")
+
+    data object CreateEditGroup: Routes("createeditgroup")
+
+
 }

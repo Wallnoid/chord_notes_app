@@ -14,22 +14,38 @@ import com.chord_notes_app.ui.components.GlobalSchema
 import com.chord_notes_app.ui.pages.account.LoginPage
 import com.chord_notes_app.ui.pages.account.RegisterPage
 import com.chord_notes_app.ui.pages.get_start.GetStartedPage
+import com.chord_notes_app.ui.pages.group.CreateEditGroupPage
+import com.chord_notes_app.ui.pages.group_notes.GroupNotesPage
 import com.chord_notes_app.ui.pages.my_notes.MyNotesPage
-import com.chord_notes_app.ui.pages.group_notes.GroupNotes
+import com.chord_notes_app.ui.pages.notes.CreateEditNotePage
 import com.chord_notes_app.ui.pages.profile.ProfilePage
 import com.chord_notes_app.ui.pages.settings.SettingsPage
+import com.chord_notes_app.utils.SharedPreferencesManager
 
 @Composable
 fun Navigation(){
     val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-    val titleState = remember { mutableStateOf("Home") }
+    val titleState = remember { mutableStateOf("My Notes") }
     val selected = remember { mutableStateOf(0) }
+    var startDestination = Routes.GetStarted.screen
+
+    val sharedPreferencesManager = SharedPreferencesManager.getInstance(navController.context)
+
+    sharedPreferencesManager.getData("token","")?.let {
+
+        if(it.equals("")){
+            startDestination = Routes.GetStarted.screen
+        }else {
+            startDestination = Routes.MyNotes.screen
+        }
+    }
+
 
     NavHost(
         navController =navController,
-        startDestination = Routes.GetStarted.screen
+        startDestination = startDestination
 
     ){
         composable(Routes.GetStarted.screen){ GetStartedPage(navController)}
@@ -49,7 +65,7 @@ fun Navigation(){
                 selected = selected,
                 drawerState = drawerState,
                 coroutineScope = coroutineScope
-                ,content = { GroupNotes(navController) })
+                ,content = { GroupNotesPage(navController) })
 
         }
         composable(Routes.Profile.screen){
@@ -70,6 +86,9 @@ fun Navigation(){
                 content = { SettingsPage(navController) })
 
         }
+
+        composable(Routes.CreateEditNote.screen){ CreateEditNotePage(navController) }
+        composable(Routes.CreateEditGroup.screen){ CreateEditGroupPage(navController)}
 
     }
 }
