@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -55,33 +57,55 @@ fun GroupNotesPage(navController: NavController,
     ) {
 
 
+
+
         Box(modifier = Modifier.fillMaxSize()){
-            Column(
-                Modifier
-                    .verticalScroll(scrollState)
-                    .fillMaxSize()
-                    .padding(vertical = 70.dp, horizontal = 16.dp),
+
+            if(groupsList.value.isEmpty()){
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+
+                ) {
+
+                    Text(text = "No groups yet", style = MaterialTheme.typography.headlineLarge.copy(
+                        color = MaterialTheme.colorScheme.outline
+                    ))
+                }
+            }else{
+
+                Column(
+                    Modifier
+                        .verticalScroll(scrollState)
+                        .fillMaxSize()
+                        .padding(vertical = 70.dp, horizontal = 16.dp),
 
 
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
-                groupsList.value.forEach { group ->
 
-                    Box(
-                        modifier = Modifier.padding( vertical = 30.dp)
-                    ) {
-                        GroupsTargetContainer(group = group)
+                    groupsList.value.forEach { group ->
 
+                        Box(
+                            modifier = Modifier.padding( vertical = 40.dp)
+                        ) {
+                            GroupsTargetContainer(group = group, navController = navController)
+
+                        }
                     }
+
+
+
+
+
                 }
 
 
-
-
-
             }
+
         }
 
 

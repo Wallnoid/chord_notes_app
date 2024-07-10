@@ -35,7 +35,7 @@ fun TwoFloatingActionButtons(
         Spacer(modifier = Modifier.height(10.dp)) // Espacio entre los botones
         CustomFloatingIconButton(
             icon = Icons.Filled.Add,
-            onClick = { /* Acción del segundo botón */ }
+            onClick = { navController.navigate("addsongtogroup")}
         )
     }
 }

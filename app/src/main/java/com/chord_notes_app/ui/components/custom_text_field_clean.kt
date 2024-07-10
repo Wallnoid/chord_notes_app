@@ -52,6 +52,7 @@ fun CustomCleanTextField(
             .padding(horizontal = 0.dp),
         singleLine = if(lines == 1){true}else{ false},
         maxLines = lines!!,
+
         keyboardActions = if(lines == 1) KeyboardActions(
             onDone = {
                 println("SE LOGRO")

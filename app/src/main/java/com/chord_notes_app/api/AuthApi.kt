@@ -2,8 +2,10 @@ package com.chord_notes_app.api
 
 import com.chord_notes_app.data.AuthResponse
 import com.chord_notes_app.data.LoginRequest
+import com.chord_notes_app.data.Member
 import com.chord_notes_app.data.RegisterRequest
 import com.chord_notes_app.data.UserResponse
+import com.chord_notes_app.data.username
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -28,4 +30,7 @@ interface AuthApi {
 
     @GET("auth/profile/")
     suspend fun profile(): UserResponse
+
+    @POST("auth/get-user-by-name/")
+    suspend fun getUserByName(@Header("Authorization") token: String, @Body username: username): Member
 }

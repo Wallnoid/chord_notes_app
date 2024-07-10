@@ -14,7 +14,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +46,10 @@ fun MyNotesPage(navController: NavController,
     LaunchedEffect(Unit) {
         getSongs(navController.context, SongsViewModel,
             onResult = {
+
                 songsList.value = it!!
+
+
 
             }
             )
@@ -64,29 +69,57 @@ fun MyNotesPage(navController: NavController,
 
 
         Box(modifier = Modifier.fillMaxSize()){
-            Column(
-                Modifier
-                    .verticalScroll(scrollState)
-                    .fillMaxSize()
-                    .padding(vertical = 90.dp, horizontal = 16.dp)
-                ,
-                verticalArrangement = Arrangement.Top,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
 
-                songsList.value.forEach { song ->
+            if(songsList.value.isEmpty()){
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 90.dp, horizontal = 16.dp)
+                    ,
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(text = "No notes yet", style = MaterialTheme.typography.headlineLarge.copy(
+                        color = MaterialTheme.colorScheme.outline
+                    ))
+                }
+            }else{
 
-                    Box(
-                        modifier = Modifier.padding( vertical = 9.dp)
-                    ) {
-                        NotesCard(song = song)
+                Column(
+                    Modifier
+                        .verticalScroll(scrollState)
+                        .fillMaxSize()
+                        .padding(vertical = 90.dp, horizontal = 16.dp)
+                    ,
+                    verticalArrangement = Arrangement.Top,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
+                    songsList.value.forEach { song ->
+
+                        Box(
+                            modifier = Modifier.padding( vertical = 9.dp)
+                        ) {
+                            NotesCard(song = song , navController = navController,
+
+{
+    navController.navigate("createeditnote/${song.id}")
+
+}
+
+                                )
+
+                        }
                     }
+
+
+
                 }
 
 
-
             }
+
+
         }
 
 

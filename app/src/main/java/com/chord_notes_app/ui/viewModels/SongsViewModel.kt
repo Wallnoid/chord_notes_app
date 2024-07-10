@@ -31,33 +31,59 @@ class SongsViewModel @Inject constructor(
 
     }
 
-    fun getSong(token: String, id: Int) {
+    fun getSong(token: String, id: Int, onResult: (SongsResponse?) -> Unit) {
         viewModelScope.launch {
             try {
                 val song = songsRepository.getSong(token, id)
                 println(song)
+                onResult(song)
             } catch (e: Exception) {
                 println(e)
+                onResult(null)
             }
         }
     }
 
-    fun createSong(token: String, song: SongsResponse) {
+    fun createSong(token: String, song: SongsResponse , onResult: (SongsResponse?) -> Unit){
 
-
-
-    }
-
-    fun updateSong(token: String, id: Int, song: SongsResponse) {
-    }
-
-    fun deleteSong(token: String, id: Int) {
         viewModelScope.launch {
             try {
-                val song = songsRepository.deleteSong(token, id)
+                val song = songsRepository.createSong(token, song)
                 println(song)
+                onResult(song)
             } catch (e: Exception) {
                 println(e)
+                onResult(null)
+            }
+        }
+
+
+
+    }
+
+    fun updateSong(token: String, id: Int, song: SongsResponse, onResult: (SongsResponse?) -> Unit) {
+
+        viewModelScope.launch {
+            try {
+                val song = songsRepository.updateSong(token, id, song)
+                println(song)
+                onResult(song)
+            } catch (e: Exception) {
+                println(e)
+                onResult(null)
+            }
+        }
+    }
+
+    fun deleteSong(token: String, id: Int, onResult: (String?) -> Unit ){
+        viewModelScope.launch {
+            try {
+                songsRepository.deleteSong(token, id)
+
+                onResult("Song deleted")
+            } catch (e: Exception) {
+                println(e)
+                onResult(null)
             }
         }
 

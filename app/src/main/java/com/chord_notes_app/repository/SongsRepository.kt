@@ -2,6 +2,7 @@ package com.chord_notes_app.repository
 
 import com.chord_notes_app.api.SongsApi
 import com.chord_notes_app.data.SongsResponse
+import retrofit2.Response
 import javax.inject.Inject
 
 class SongsRepository @Inject constructor(
@@ -24,7 +25,7 @@ class SongsRepository @Inject constructor(
         return songsApi.updateSong( token, id, song);
     }
 
-    suspend fun deleteSong( token: String, id: Int): String{
+    suspend fun deleteSong( token: String, id: Int): Response<Unit?> {
         return songsApi.deleteSong( token, id);
     }
 

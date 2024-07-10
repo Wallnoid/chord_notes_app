@@ -1,8 +1,8 @@
 package com.chord_notes_app.ui.pages.notes
 
+
 import android.annotation.SuppressLint
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,16 +17,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.AutoFixHigh
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.Save
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -40,7 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -48,12 +43,8 @@ import com.chord_notes_app.constants.formatDate
 import com.chord_notes_app.data.Chords
 import com.chord_notes_app.data.Lyrics
 import com.chord_notes_app.data.SongsResponse
-import com.chord_notes_app.schemas.songSchema
 import com.chord_notes_app.ui.components.CustomCleanTextField
 import com.chord_notes_app.ui.components.CustomTopAppBar
-import com.chord_notes_app.ui.pages.notes.actions.createSong
-import com.chord_notes_app.ui.pages.notes.actions.deleteSong
-import com.chord_notes_app.ui.pages.notes.actions.editSong
 import com.chord_notes_app.ui.pages.notes.actions.getSong
 import com.chord_notes_app.ui.pages.notes.components.CustomText
 import com.chord_notes_app.ui.pages.notes.components.IconTitle
@@ -65,10 +56,10 @@ import com.chord_notes_app.utils.SharedPreferencesManager
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateEditNotePage(
+fun SeeNotePage(
     noteId: String? = null,
-   navController: NavController,
-   SongsViewModel: SongsViewModel = hiltViewModel()
+    navController: NavController,
+    SongsViewModel: SongsViewModel = hiltViewModel()
 ) {
 
     val song = remember { mutableStateOf<SongsResponse>(
@@ -249,147 +240,12 @@ fun CreateEditNotePage(
         topBar = {
             val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
-            CustomTopAppBar(scrollBehavior = scrollBehavior, title ="Create Song", icon =
+            CustomTopAppBar(scrollBehavior = scrollBehavior, title ="View Song", icon =
             Icons.Filled.ArrowBackIosNew,
                 onNavigationIconClicked = {
                     navController.popBackStack()
                 },
-                action = {
 
-                    IconButton(onClick = {
-
-                        var songSchema = songSchema(name = title.value, key = key.value, bpm = bpm.value, author = autor.value)
-
-                        if(song.equals("OK") ){
-                            Toast.makeText(navController.context, songSchema, Toast.LENGTH_SHORT).show()
-                            return@IconButton
-                        }
-
-                        textFieldsValues.forEach { (key, value) ->
-                            println("Key: $key, Value: ${value.value}")
-                        }
-
-                        chordList.forEach { (key, value) ->
-                            println("Key: $key, Value: $value")
-                        }
-
-
-                        val lyricsAux = mutableMapOf<Int, String>()
-                        val chordAuxiliar =  mutableMapOf<Int, MutableList<String>>()
-
-                        var i = 1
-                        textFieldsValues.forEach { (key, value) ->
-                            lyricsAux[i] = value.value
-                            chordAuxiliar[i] = chordList.get(key)!!
-                            i++
-
-                        }
-
-
-
-                        val chordList = Chords(lines = chordAuxiliar)
-
-                        val lyrics = Lyrics(lines = lyricsAux)
-
-                        try {
-
-
-
-
-                            if(isEdit){
-                                val song = SongsResponse(
-                                    author = autor.value,
-                                    bpm = bpm.value.toInt(),
-                                    chords = chordList,
-                                    id_prov = "",
-                                    key = key.value,
-                                    lyrics = lyrics,
-                                    name = title.value,
-                                    id = noteId!!.toInt(),
-                                    name_user = user.toString(),
-                                    date = ""
-                                )
-
-                                editSong(
-                                    navController = navController,
-                                    song = song,
-                                    onResult = {
-                                        println(it)
-                                    }
-                                    ,
-                                    songsViewModel = SongsViewModel
-                                )
-
-
-
-                            }else{
-                                val song = SongsResponse(
-                                    author = autor.value,
-                                    bpm = bpm.value.toInt(),
-                                    chords = chordList,
-                                    id_prov = "",
-                                    key = key.value,
-                                    lyrics = lyrics,
-                                    name = title.value,
-                                    id = null,
-                                    name_user = user.toString(),
-                                    date = ""
-                                )
-
-                                createSong(
-                                    navController = navController,
-                                    song = song,
-                                    onResult = {
-                                        println(it)
-                                    }
-                                    ,
-                                    songsViewModel = SongsViewModel
-
-                                )
-                            }
-
-
-
-
-
-                        } catch (e: Exception) {
-                            Toast.makeText(navController.context, "only numbers in bpm", Toast.LENGTH_SHORT).show()
-                        }
-
-
-
-
-
-                    }) {
-                        Icon(
-                            imageVector = Icons.Outlined.Save,
-                            contentDescription = "Localized description"
-                        )
-
-                    }
-
-                    if(isEdit){
-                        IconButton(onClick = {
-                            deleteSong(
-                                navController = navController,
-                                song = song.value,
-                                onResult = {
-                                    println(it)
-                                }
-                                ,
-                                songsViewModel = SongsViewModel
-                            )
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Delete,
-                                contentDescription = "Localized description"
-                            )
-                        }
-                    }
-
-                    //
-
-                }
 
             )
         }
@@ -553,8 +409,8 @@ fun CreateEditNotePage(
 
                 textFields = mapOf(
                     0 to { InputChord(index =0, label = "Tap to start writing..." ,callback = { actualizarTextfields( previousKey = 0) }, eliminarCallback =  { eliminarTextfield(0) },
-                         value = textFieldsValues[0]!!
-                    ,
+                        value = textFieldsValues[0]!!
+                        ,
                         addChords = { index, chords ->
                             chordList[index] = chords
                         },
@@ -584,8 +440,3 @@ fun CreateEditNotePage(
 }
 
 
-@Composable
-@Preview(showBackground = true)
-fun CreateEditNotePagePreview() {
-    //CreateEditNotePage()
-}

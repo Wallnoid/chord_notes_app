@@ -25,7 +25,8 @@ import com.chord_notes_app.utils.cutString
 @Composable
 fun UserItem(
     userName: String,
-    email: String
+    email: String,
+    onDelete: () -> Unit
 ){
 
     Row(
@@ -80,7 +81,10 @@ fun UserItem(
 
         CustomIconButton(
             icon = Icons.Filled.Close,
-            {}
+            {
+                onDelete()
+
+            }
         )
 
 

@@ -1,5 +1,7 @@
 package com.chord_notes_app.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -9,19 +11,23 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.chord_notes_app.routes.Routes
 import com.chord_notes_app.ui.components.GlobalSchema
 import com.chord_notes_app.ui.pages.account.LoginPage
 import com.chord_notes_app.ui.pages.account.RegisterPage
 import com.chord_notes_app.ui.pages.get_start.GetStartedPage
 import com.chord_notes_app.ui.pages.group.CreateEditGroupPage
+import com.chord_notes_app.ui.pages.group_notes.AddSongToGroupPage
 import com.chord_notes_app.ui.pages.group_notes.GroupNotesPage
 import com.chord_notes_app.ui.pages.my_notes.MyNotesPage
 import com.chord_notes_app.ui.pages.notes.CreateEditNotePage
+import com.chord_notes_app.ui.pages.notes.SeeNotePage
 import com.chord_notes_app.ui.pages.profile.ProfilePage
 import com.chord_notes_app.ui.pages.settings.SettingsPage
 import com.chord_notes_app.utils.SharedPreferencesManager
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun Navigation(){
     val navController = rememberNavController()
@@ -87,8 +93,29 @@ fun Navigation(){
 
         }
 
-        composable(Routes.CreateEditNote.screen){ CreateEditNotePage(navController) }
-        composable(Routes.CreateEditGroup.screen){ CreateEditGroupPage(navController)}
+        composable(Routes.EditNote.screen ,
+
+            arguments =  listOf(navArgument("noteId") { defaultValue = "" })
+            ){ backStackEntry ->  CreateEditNotePage(noteId = backStackEntry.arguments?.getString("noteId"),navController) }
+
+        composable(Routes.CreateNote.screen){ CreateEditNotePage(noteId = null,navController) }
+
+
+        composable(Routes.CreateGroup.screen){ CreateEditGroupPage(groupId = null, navController)}
+
+        composable(Routes.EditGroup.screen,
+            arguments =  listOf(navArgument("groupId") { defaultValue = "" })
+            ){ backStackEntry ->  CreateEditGroupPage(groupId = backStackEntry.arguments?.getString("groupId"),navController) }
+        
+        composable(Routes.AddSongToGroup.screen){ AddSongToGroupPage(navController = navController) }
+
+
+        composable(Routes.SeeSong.screen,
+            arguments =  listOf(navArgument("noteId") { defaultValue = "" })
+            ){ backStackEntry ->  SeeNotePage(noteId = backStackEntry.arguments?.getString("noteId"),navController) }
+
+
+
 
     }
 }

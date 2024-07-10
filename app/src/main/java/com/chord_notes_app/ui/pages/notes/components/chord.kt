@@ -19,7 +19,8 @@ import com.chord_notes_app.ui.components.InputDialog
 
 @Composable
 fun Chord(
-    chord: MutableState<String>
+    chord: MutableState<String>,
+    callback: () -> Unit
 ){
 
     val colorBackground = if (chord.value != "   ") MaterialTheme.colorScheme.primaryContainer else Color.Transparent
@@ -32,6 +33,7 @@ fun Chord(
 
             .clickable {
                 show.value = true
+                callback()
 
             }
 
@@ -44,7 +46,8 @@ fun Chord(
 
         InputDialog(
             value = chord,
-            showDialog = show
+            showDialog = show,
+            callback = callback
         )
 
 
@@ -58,40 +61,16 @@ fun Chord(
     }
 }
 
-@Composable
-fun Chord2(
-    chord: MutableState<String>
-){
-
-    val colorBackground = if (chord.value != "   ") MaterialTheme.colorScheme.background else Color.Transparent
-    val colorBorder = if (chord.value != "   ") MaterialTheme.colorScheme.background else Color.Transparent
-
-    val show = remember { mutableStateOf(false) }
-
-        InputDialog(
-            value = chord,
-            showDialog = show
-        )
-
-        Text(text = chord.value, style = MaterialTheme.typography.titleLarge.copy(
-            fontWeight = FontWeight(600),
-        ), color = MaterialTheme.colorScheme.tertiary,
-
-            modifier = Modifier.padding(horizontal = 7.dp, vertical = 0.dp).clickable { show.value = true},
-        )
-
-
-}
 
 @Preview(showBackground = true)
 @Composable
 fun ChordPreview() {
 
-    val chord = remember { mutableStateOf("A") }
-
-    Chord(
-        chord = chord
-    )
-
+//    val chord = remember { mutableStateOf("A") }
+//
+//    Chord(
+//        chord = chord
+//    )
+//
 
 }

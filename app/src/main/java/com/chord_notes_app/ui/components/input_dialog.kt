@@ -13,7 +13,8 @@ import androidx.compose.ui.text.font.FontWeight
 @Composable
 fun InputDialog(
     showDialog: MutableState<Boolean>,
-    value: MutableState<String>
+    value: MutableState<String>,
+    callback: () -> Unit
 ) {
 
     Column(
@@ -50,15 +51,7 @@ fun InputDialog(
                         Text("OK")
                     }
                 },
-                dismissButton = {
-                    TextButton(
-                        onClick = {
-                            showDialog.value = false
-                        }
-                    ) {
-                        Text("Cancel")
-                    }
-                }
+
             )
         }
     }

@@ -4,9 +4,11 @@ data class SongsResponse(
     val author: String,
     val bpm: Int,
     val chords: Chords,
-    val id: Int,
+    val id: Int?,
     val id_prov: String,
     val key: String,
     val lyrics: Lyrics,
-    val name: String
+    val name: String,
+    val name_user: String,
+    val date: String
 )

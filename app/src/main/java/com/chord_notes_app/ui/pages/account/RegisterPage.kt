@@ -186,7 +186,7 @@ fun RegisterPage(navController: NavController,
                                 label = "Email address",
                                 icon = Icons.Outlined.Email,
                                 placeholder = "Enter your Email",
-                                isValid = false,
+                                isValid = true,
                                 errorMessage = "Error",
                                 text = emailState.value,
                                 onChange = { emailState.value = it }
@@ -196,7 +196,7 @@ fun RegisterPage(navController: NavController,
 
 
                             PasswordTextField(label = "", icon = Icons.Outlined.Info,
-                                    isValid = false,
+                                    isValid = true,
                                 errorMessage = "Error",
                                 text = passwordState.value,
                                 onChange = { passwordState.value = it }

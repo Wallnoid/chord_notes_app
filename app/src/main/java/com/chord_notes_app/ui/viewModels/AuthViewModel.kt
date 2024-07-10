@@ -3,7 +3,9 @@ package com.chord_notes_app.ui.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.chord_notes_app.data.AuthResponse
+import com.chord_notes_app.data.Member
 import com.chord_notes_app.data.UserResponse
+import com.chord_notes_app.data.username
 import com.chord_notes_app.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -67,6 +69,17 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val user = authRepository.profile()
+                onResult(user)
+            } catch (e: Exception) {
+                onResult(null)
+            }
+        }
+    }
+
+    fun getUserByName(token: String, username: username, onResult:(Member?) -> Unit ) {
+        viewModelScope.launch {
+            try {
+                val user = authRepository.getUserByName(token, username)
                 onResult(user)
             } catch (e: Exception) {
                 onResult(null)

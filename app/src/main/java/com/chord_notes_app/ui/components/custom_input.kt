@@ -33,7 +33,8 @@ fun CustomTextField(
     label: String = "",
     modifier: Modifier = Modifier,
     icon: ImageVector,
-    trailing: @Composable () -> Unit? = {}
+    trailing: @Composable () -> Unit? = {},
+    enable: Boolean? = true
 ) {
     Column(modifier = modifier) {
         if (label.isNotEmpty()) {
@@ -46,6 +47,7 @@ fun CustomTextField(
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = value,
+            enabled = enable!!,
             onValueChange = onValueChange,
             placeholder = { Text(placeholder) },
             leadingIcon = {

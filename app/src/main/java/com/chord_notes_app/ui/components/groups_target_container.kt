@@ -15,12 +15,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.chord_notes_app.data.GroupsResponse
 
 
 @Composable
 fun GroupsTargetContainer(
     group : GroupsResponse,
+    navController: NavController
 ) {
 
         Column(
@@ -45,8 +47,30 @@ fun GroupsTargetContainer(
 
                 CustomIconButton(
                     icon = Icons.Outlined.Settings,
-                    {}
+                    {
+                        navController.navigate("createeditgroup/${group.id}")
+                    }
                 )
+
+            }
+            Spacer(modifier = Modifier.height(20.dp))
+
+
+            if(group.songs.isEmpty()){
+
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Text(
+                        text = "No songs",
+                        style = MaterialTheme.typography.headlineSmall,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+
+                }
+
 
             }
 
@@ -56,7 +80,10 @@ fun GroupsTargetContainer(
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    NotesCard(song = song)
+                    NotesCard(song = song, navController = navController, {
+                        navController.navigate("seeSong/${song.id}")
+
+                    })
 
                 }
             )

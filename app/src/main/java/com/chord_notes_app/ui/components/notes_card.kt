@@ -21,12 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.chord_notes_app.data.SongsResponse
 import com.chord_notes_app.ui.components.SimpleChip
 
 @Composable
 fun NotesCard(
-    song: SongsResponse
+    song: SongsResponse,
+    navController: NavController,
+    function: () -> Unit
 ) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(
@@ -36,6 +39,9 @@ fun NotesCard(
             .fillMaxWidth()
             .height(100.dp)
             .clickable {
+                println("Clicked on ${song.id}")
+                function()
+
 
             }
 
